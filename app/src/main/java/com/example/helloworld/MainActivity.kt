@@ -12,14 +12,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Message de bienvenue
+        Toast.makeText(this, getString(R.string.message_de_bienvenue), Toast.LENGTH_SHORT).show()
+
         // Initialisation du bouton
         val buttonBle = findViewById<Button>(R.id.button)
         buttonBle.setOnClickListener {
             // Gestion de l'événement de clic
-            connexion_au_peripherique_BLE()
+            connexionAuPeripheriqueBLE()
         }
     }
-    private fun connexion_au_peripherique_BLE() {
+    private fun connexionAuPeripheriqueBLE() {
         // Code pour démarrer la connexion BLE
         Toast.makeText(this, "Connexion au périphérique BLE...", Toast.LENGTH_SHORT).show()
     }

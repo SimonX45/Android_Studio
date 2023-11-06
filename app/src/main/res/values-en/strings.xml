@@ -3,4 +3,5 @@
     <string name="app_name">Hello World</string>
     <string name="bienvenue_sur_cette_application">"Welcome "</string>
     <string name="connexion">Connection</string>
+    <string name="message_de_bienvenue">Welcome !</string>
 </resources>

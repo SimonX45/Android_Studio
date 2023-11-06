@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/bouton_connexion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/connexion"
@@ -28,6 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <ImageView
+        android:contentDescription="@string/description_image_accueil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/icon"
@@ -35,6 +36,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

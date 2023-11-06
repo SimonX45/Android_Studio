@@ -4,4 +4,6 @@
     <string name="bienvenue_sur_cette_application">"Welcome "</string>
     <string name="connexion">Connection</string>
     <string name="message_de_bienvenue">Welcome !</string>
+    <string name="description_image_accueil">Welcome picture</string>
+    <string name="message_de_connexion">Connection...</string>
 </resources>

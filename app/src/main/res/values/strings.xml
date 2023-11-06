@@ -3,4 +3,6 @@
     <string name="bienvenue_sur_cette_application">Bienvenue sur cette application</string>
     <string name="connexion">Connexion</string>
     <string name="message_de_bienvenue">Bienvenue !</string>
+    <string name="description_image_accueil">Image accueil</string>
+    <string name="message_de_connexion">Connexion...</string>
 </resources>

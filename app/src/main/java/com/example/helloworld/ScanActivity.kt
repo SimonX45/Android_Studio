@@ -3,7 +3,7 @@ package com.example.helloworld
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothClass
+import com.example.helloworld.Device
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
@@ -27,6 +27,8 @@ import androidx.core.content.ContextCompat
 
 import android.Manifest
 import android.provider.Settings
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 
 //import android.content.pm.PackageManager
@@ -65,11 +67,12 @@ class ScanActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
     // DataSource de notre adapter.
-    private val bleDevicesFoundList = arrayListOf<BluetoothClass.Device>()
+    private val bleDevicesFoundList = arrayListOf<Device>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan)
+        setupRecycler()
     }
 
 
@@ -157,8 +160,14 @@ class ScanActivity : AppCompatActivity() {
             // Le Bluetooth est activé, on lance le scan
             scanLeDevice()
         } else {
-            // Bluetooth non activé, vous DEVEZ gérer ce cas autrement qu'avec un Toast.
-            Toast.makeText(this, "Bluetooth non activé", Toast.LENGTH_SHORT).show()
+            // TODO : Bluetooth non activé, vous DEVEZ gérer ce cas autrement qu'avec un Toast.
+
+            // Affiche un dialog pour demander à l'utilisateur d'activer le Bluetooth
+            MaterialDialog(this).show {
+                title(R.string.titre_bouton)
+                message(R.string.message_bluetooth_non_active)
+            }
+//            Toast.makeText(this, "Bluetooth non activé", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -172,6 +181,7 @@ class ScanActivity : AppCompatActivity() {
         (getSystemService(BLUETOOTH_SERVICE) as BluetoothManager?)?.let { bluetoothManager ->
             bluetoothAdapter = bluetoothManager.adapter
             if (bluetoothAdapter != null && !bluetoothManager.adapter.isEnabled) {
+                Toast.makeText(this, R.string.message_bluetooth_non_active, Toast.LENGTH_SHORT).show()
                 registerForResult.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
             } else {
                 scanLeDevice()
@@ -202,7 +212,8 @@ class ScanActivity : AppCompatActivity() {
                 // On lance le scan
                 bluetoothLeScanner?.startScan(scanFilters, scanSettings, leScanCallback)
             } else {
-                // Demander les permissions ou gérer l'absence de permission
+                // TODO : Demander les permissions ou gérer l'absence de permission
+                askForPermission()
             }
         }
     }
@@ -212,14 +223,27 @@ class ScanActivity : AppCompatActivity() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             super.onScanResult(callbackType, result)
 
-            // C'est ici que nous allons créer notre « Device » et l'ajouter dans la dataSource de notre RecyclerView
+//             C'est ici que nous allons créer notre « Device » et l'ajouter dans la dataSource de notre RecyclerView
 
-            // val device = Device(result.device.name, result.device.address, result.device)
-            // if (!device.name.isNullOrBlank() && !bleDevicesFoundList.contains(device)) {
-            //     bleDevicesFoundList.add(device)
-            //     Indique à l'adapter que nous avons ajouté un élément, il va donc se mettre à jour
-            //     findViewById<RecyclerView>(R.id.rvDevices).adapter?.notifyItemInserted(bleDevicesFoundList.size - 1)
-            // }
+             val device = Device(result.device.name, result.device.address, result.device)
+             if (!device.name.isNullOrBlank() && !bleDevicesFoundList.contains(device)) {
+                 bleDevicesFoundList.add(device)
+//                 Indique à l'adapter que nous avons ajouté un élément, il va donc se mettre à jour
+                 findViewById<RecyclerView>(R.id.rvDevices).adapter?.notifyItemInserted(bleDevicesFoundList.size - 1)
+             }
+        }
+    }
+
+    private fun setupRecycler() {
+        val rvDevice = findViewById<RecyclerView>(R.id.rvDevices) // Récupération du RecyclerView présent dans le layout
+        rvDevice.layoutManager = LinearLayoutManager(this) // Définition du LayoutManager, Comment vont être affichés les éléments, ici en liste
+        rvDevice.adapter = DeviceAdapter(bleDevicesFoundList) { device ->
+            // Le code écrit ici sera appelé lorsque l'utilisateur cliquera sur un élément de la liste.
+            // C'est un « callback », c'est-à-dire une méthode qui sera appelée à un moment précis.
+            // Évidemment, vous pouvez faire ce que vous voulez. Nous nous connecterons plus tard à notre périphérique
+
+            // Pour la démo, nous allons afficher un Toast avec le nom du périphérique choisi par l'utilisateur.
+            Toast.makeText(this@ScanActivity, "Clique sur $device", Toast.LENGTH_SHORT).show()
         }
     }
 

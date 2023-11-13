@@ -11,4 +11,5 @@
     <string name="texte_deuxieme_bouton">Secon button</string>
     <string name="scan_ended">Scan terminated</string>
     <string name="message_permission_localisation_refusee">Please go to app settings and accept location permission.</string>
+    <string name="message_bluetooth_non_active">Please activate your bluetooth.</string>
 </resources>

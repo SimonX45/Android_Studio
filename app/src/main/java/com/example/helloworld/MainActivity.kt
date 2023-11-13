@@ -1,5 +1,7 @@
 package com.example.helloworld
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -10,6 +12,14 @@ import com.google.android.material.snackbar.Snackbar
 
 
 class MainActivity : AppCompatActivity() {
+
+    // Créer une méthode static qui retourne une intent
+    companion object {
+        fun getStartIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)    // Depuis la mainactivity
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -48,4 +58,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+
 }
+

@@ -6,4 +6,7 @@
     <string name="message_de_bienvenue">Welcome !</string>
     <string name="description_image_accueil">Welcome picture</string>
     <string name="message_de_connexion">Connection...</string>
+    <string name="titre_bouton">Hey !</string>
+    <string name="message_bouton">Message</string>
+    <string name="texte_deuxieme_bouton">Secon button</string>
 </resources>

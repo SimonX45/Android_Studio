@@ -75,9 +75,6 @@ class ScanActivity : AppCompatActivity() {
         setupRecycler()
     }
 
-
-
-
     /**
      * Gère l'action après la demande de permission.
      * 2 cas possibles :
@@ -244,6 +241,27 @@ class ScanActivity : AppCompatActivity() {
 
             // Pour la démo, nous allons afficher un Toast avec le nom du périphérique choisi par l'utilisateur.
             Toast.makeText(this@ScanActivity, "Clique sur $device", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            // Test si le téléphone est compatible BLE, si c'est pas le cas, on finish() l'activity
+            Toast.makeText(this, getString(R.string.not_compatible), Toast.LENGTH_SHORT).show()
+            finish()
+        } else if (hasPermission() && locationServiceEnabled()) {
+            // Lancer suite => Activation BLE + Lancer Scan
+            setupBLE()
+        } else if(!hasPermission()) {
+            // On demande la permission
+            askForPermission()
+        } else {
+            // On demande d'activer la localisation
+            // Idéalement on demande avec un activité.
+            // À vous de me proposer mieux (Une activité, une dialog, etc)
+            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         }
     }
 

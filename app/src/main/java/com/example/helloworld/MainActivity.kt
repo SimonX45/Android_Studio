@@ -2,6 +2,7 @@ package com.example.helloworld
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -66,7 +67,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(SplashActivity.getStartIntent(this))    // Lance l'activité de la mainactivity
             finish()    // Important : détruit la classe, si ce n'est pas fait : quand l'utilisateur revient sur le splash screen quand il fait retour
         }, 1000)    // Lance le code après 1 seconde
-
     }
+
+
 }
 

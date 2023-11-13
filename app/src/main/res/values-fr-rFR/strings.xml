@@ -9,4 +9,6 @@
     <string name="titre_bouton">Hey !</string>
     <string name="message_bouton">Message</string>
     <string name="texte_deuxieme_bouton">Deuxième bouton</string>
+    <string name="scan_ended">Scan terminé</string>
+    <string name="message_permission_localisation_refusee">Veuillez vous rendre dans les paramètres de l\'application et accepter la permission de localisation.</string>
 </resources>

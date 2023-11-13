@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
@@ -48,6 +50,9 @@ class MainActivity : AppCompatActivity() {
         // Ce qui se passe quand on clique sur le bouton
         Toast.makeText(this, "Action du bouton Snackbar ", Toast.LENGTH_SHORT).show()
         }.show()
+
+        // Affiche la fenêtre de l'activity "RemoteActivity" en passant l'ID à "CECI-EST-UN-IDENTIFIANT" qui s'affiche sur la fenêtre
+        startActivity(RemoteActivity.getStartIntent(this, "CECI-EST-UN-IDENTIFIANT"))   // Paramètres : Qui lance l'activité, et quel paramètre on envoit
     }
 
     // Clic sur le deuxième bouton
@@ -56,9 +61,12 @@ class MainActivity : AppCompatActivity() {
             title(R.string.titre_bouton)
             message(R.string.message_bouton)
         }
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            startActivity(SplashActivity.getStartIntent(this))    // Lance l'activité de la mainactivity
+            finish()    // Important : détruit la classe, si ce n'est pas fait : quand l'utilisateur revient sur le splash screen quand il fait retour
+        }, 1000)    // Lance le code après 1 seconde
+
     }
-
-
-
 }
 

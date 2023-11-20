@@ -19,4 +19,9 @@
     <string name="texte_bouton_toggleLed">Toggle LED</string>
     <string name="ledStatus">Statut de la LED</string>
     <string name="connected_to">Connecté à : %1$s</string>
+    <string name="texte_bouton_ajout">Ajout !</string>
+    <string name="uuid_not_found">UUID non trouvé</string>
+    <string name="not_connected">Non connecté</string>
+    <string name="enable_ble_notifications">Activation des notifications BLE</string>
+    <string name="led_count">Compteur allumage LED : %d</string>
 </resources>

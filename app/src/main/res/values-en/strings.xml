@@ -19,4 +19,9 @@
     <string name="texte_bouton_toggleLed">Toggle LED</string>
     <string name="ledStatus">LED status</string>
     <string name="connected_to">Connected to : %1$s</string>
+    <string name="texte_bouton_ajout">Add !</string>
+    <string name="uuid_not_found">UUID not found</string>
+    <string name="not_connected">Not connected</string>
+    <string name="enable_ble_notifications">Activation of BLE notifications</string>
+    <string name="led_count">LED ignition meter : %d</string>
 </resources>

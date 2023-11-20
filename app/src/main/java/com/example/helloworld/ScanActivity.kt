@@ -34,9 +34,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 import android.Manifest
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattService
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -88,7 +91,8 @@ class ScanActivity : AppCompatActivity() {
     private var currentConnexion: TextView? = null
     private var disconnect: Button? = null
     private var toggleLed: Button? = null
-    private var ledStatus: TextView? = null
+    private var ledStatus: ImageView? = null
+    private var ledCount: TextView? = null      // Ajouté par moi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,11 +104,27 @@ class ScanActivity : AppCompatActivity() {
 //        currentConnexion = findViewById<View>(R.id.currentConnexion)
         currentConnexion = findViewById<TextView>(R.id.currentConnexion)
 //        disconnect = findViewById<View>(R.id.disconnect)
-        startScan = findViewById<Button>(R.id.disconnect)
+        disconnect = findViewById<Button>(R.id.disconnect)
+        startScan = findViewById<Button>(R.id.startScan)
 //        toggleLed = findViewById<View>(R.id.toggleLed)
         toggleLed = findViewById<Button>(R.id.toggleLed)
 //        ledStatus = findViewById<View>(R.id.ledStatus)
-        ledStatus = findViewById<Button>(R.id.ledStatus)
+        ledStatus = findViewById<ImageView>(R.id.ledStatus)
+        ledCount = findViewById<Button>(R.id.ledCount)      // Ajouté par moi
+
+        startScan?.setOnClickListener {
+            askForPermission()  // Après la demande de permission ça lance automatiquement le scan si l'autorisation est acceptée
+        }
+
+        disconnect?.setOnClickListener {
+            // Appeler la bonne méthode
+            disconnectFromCurrentDevice()
+        }
+
+        toggleLed?.setOnClickListener {
+            // Appeler la bonne méthode
+            toggleLed()
+        }
 
     }
 
@@ -431,5 +451,69 @@ class ScanActivity : AppCompatActivity() {
             disconnect?.visibility = View.GONE // Cache le bouton de déconnexion
             toggleLed?.visibility = View.GONE // Cache le bouton pour activer/désactiver le LED
         }
+    }
+
+    /**
+     * Récupération de « service » BLE (via UUID) qui nous permettra d'envoyer / recevoir des commandes
+     */
+    private fun getMainDeviceService(): BluetoothGattService? {
+        return currentBluetoothGatt?.let { bleGatt ->
+            val service = bleGatt.getService(BluetoothLEManager.DEVICE_UUID)
+            service?.let {
+                return it
+            } ?: run {
+                Toast.makeText(this, getString(R.string.uuid_not_found), Toast.LENGTH_SHORT).show()
+                return null;
+            }
+        } ?: run {
+            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show()
+            return null
+        }
+    }
+
+    /**
+     * On change l'état de la LED (via l'UUID de toggle)
+     */
+    @SuppressLint("MissingPermission")
+    private fun toggleLed() {
+        getMainDeviceService()?.let { service ->
+            val toggleLed = service.getCharacteristic(BluetoothLEManager.CHARACTERISTIC_TOGGLE_LED_UUID)
+            toggleLed.setValue("1")
+            currentBluetoothGatt?.writeCharacteristic(toggleLed)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun enableListenBleNotify() {
+        getMainDeviceService()?.let { service ->
+            Toast.makeText(this, getString(R.string.enable_ble_notifications), Toast.LENGTH_SHORT).show()
+            // Indique que le GATT Client va écouter les notifications sur le charactérisque
+            val notificationStatus = service.getCharacteristic(BluetoothLEManager.CHARACTERISTIC_NOTIFY_STATE)
+            val notificationLedCount = service.getCharacteristic(BluetoothLEManager.CHARACTERISTIC_GET_COUNT)
+            val wifiScan = service.getCharacteristic(BluetoothLEManager.CHARACTERISTIC_GET_WIFI_SCAN)
+
+            currentBluetoothGatt?.setCharacteristicNotification(notificationStatus, true)
+            currentBluetoothGatt?.setCharacteristicNotification(notificationLedCount, true)
+            currentBluetoothGatt?.setCharacteristicNotification(wifiScan, true)
+        }
+    }
+
+    private fun handleToggleLedNotificationUpdate(characteristic: BluetoothGattCharacteristic) {
+        if (characteristic.getStringValue(0).equals("on", ignoreCase = true)) {
+            ledStatus?.setImageResource(R.drawable.led_on)
+        } else {
+            ledStatus?.setImageResource(R.drawable.led_off)
+        }
+    }
+
+    private fun handleCountLedChangeNotificationUpdate(characteristic: BluetoothGattCharacteristic) {
+        characteristic.getStringValue(0).toIntOrNull()?.let {
+            ledCount?.text = getString(R.string.led_count, it)
+        }
+    }
+
+    private fun handleOnNotifyNotificationReceived(characteristic: BluetoothGattCharacteristic) {
+        // TODO : Vous devez ici récupérer la liste des réseaux WiFi disponibles et les afficher dans une liste.
+        // Vous pouvez utiliser un RecyclerView pour afficher la liste des réseaux WiFi disponibles.
     }
 }

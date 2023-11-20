@@ -12,17 +12,70 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/list_item_device" />
 
     <Button
         android:id="@+id/button"
-        android:text="AJOUT !!"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="AJOUT !!"
+        app:layout_constraintBottom_toBottomOf="@+id/rvDevices"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/disconnect" />
+
+    <Button
+        android:id="@+id/startScan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/texte_bouton_start_scan"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/rvDevices"
+        app:layout_constraintTop_toTopOf="@+id/rvDevices" />
+
+    <TextView
+        android:id="@+id/currentConnexion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/texte_textView_currentConnexion"
+        app:layout_constraintBottom_toTopOf="@+id/startScan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rvDevices" />
+
+    <Button
+        android:id="@+id/disconnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/texte_bouton_disconnect"
+        app:layout_constraintBottom_toBottomOf="@+id/rvDevices"
+        app:layout_constraintEnd_toEndOf="@+id/rvDevices"
+        app:layout_constraintStart_toStartOf="@+id/rvDevices"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/toggleLed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/texte_bouton_toggleLed"
+        app:layout_constraintBottom_toTopOf="@+id/startScan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentConnexion" />
+
+    <TextView
+        android:id="@+id/ledStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ledStatus"
+        app:layout_constraintBottom_toTopOf="@+id/startScan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggleLed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

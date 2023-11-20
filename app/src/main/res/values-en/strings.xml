@@ -13,4 +13,10 @@
     <string name="message_permission_localisation_refusee">Please go to app settings and accept location permission.</string>
     <string name="message_bluetooth_non_active">Please activate your bluetooth.</string>
     <string name="not_compatible">Phone not compatible with BLE.</string>
+    <string name="texte_bouton_start_scan">Start scan</string>
+    <string name="texte_textView_currentConnexion">"Connected à "</string>
+    <string name="texte_bouton_disconnect">Disconnected</string>
+    <string name="texte_bouton_toggleLed">Toggle LED</string>
+    <string name="ledStatus">LED status</string>
+    <string name="connected_to">Connected to : %1$s</string>
 </resources>

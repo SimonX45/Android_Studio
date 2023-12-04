@@ -53,7 +53,11 @@ class MainActivity : AppCompatActivity() {
         }.show()
 
         // Affiche la fenêtre de l'activity "RemoteActivity" en passant l'ID à "CECI-EST-UN-IDENTIFIANT" qui s'affiche sur la fenêtre
-        startActivity(RemoteActivity.getStartIntent(this, "CECI-EST-UN-IDENTIFIANT"))   // Paramètres : Qui lance l'activité, et quel paramètre on envoit
+        //startActivity(RemoteActivity.getStartIntent(this, "CECI-EST-UN-IDENTIFIANT"))   // Paramètres : Qui lance l'activité, et quel paramètre on envoit
+
+        // TEST : lancer scanActivity
+        startActivity(ScanActivity.getStartIntent(this))
+
     }
 
     // Clic sur le deuxième bouton

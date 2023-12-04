@@ -57,6 +57,11 @@ class ScanActivity : AppCompatActivity() {
         // Demande de permission
         private const val PERMISSION_REQUEST_LOCATION = 1
 //        private const val REQUEST_BLUETOOTH_CONNECT = 2
+
+        // TEST : Ajouté pour tester
+        fun getStartIntent(context: Context): Intent {
+            return Intent(context, ScanActivity::class.java)
+        }
     }
 
     // Gestion du Bluetooth
@@ -94,6 +99,7 @@ class ScanActivity : AppCompatActivity() {
     private var ledStatus: ImageView? = null
     private var ledCount: TextView? = null      // Ajouté par moi
 
+    // Ce qui se passe à la création de l'activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan)
@@ -125,6 +131,9 @@ class ScanActivity : AppCompatActivity() {
             // Appeler la bonne méthode
             toggleLed()
         }
+
+        // On cache une partie de l'interface au départ, qui sera affichée une fois que l'on sera connecté au Device
+        setUiMode(false)
 
     }
 
@@ -321,6 +330,11 @@ class ScanActivity : AppCompatActivity() {
 
             // Pour la démo, nous allons afficher un Toast avec le nom du périphérique choisi par l'utilisateur.
             Toast.makeText(this@ScanActivity, "Clique sur $device", Toast.LENGTH_SHORT).show()
+
+            // Connect to the device
+            BluetoothLEManager.currentDevice = device.device    // A garder ?
+            connectToCurrentDevice()
+
         }
     }
 
@@ -378,6 +392,7 @@ class ScanActivity : AppCompatActivity() {
                     onConnect = {
                         // On indique à l'utilisateur que nous sommes correctement connecté
                         runOnUiThread {
+                            Toast.makeText(this, "Connecté à : $device", Toast.LENGTH_SHORT).show()
                             // Nous sommes connecté au device, on active les notifications pour être notifié si la LED change d'état.
 
                             // À IMPLÉMENTER

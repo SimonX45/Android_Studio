@@ -126,6 +126,8 @@ class ScanActivity : AppCompatActivity() {
         ledCount = findViewById<Button>(R.id.ledCount)      // Ajouté par moi
 
         startScan?.setOnClickListener {
+            startScan?.isEnabled = false // Désactive la possibilité de cliquer sur le bouton « Start Scan »
+            startScan?.text = getString(R.string.scanning)  // Met le texte du bouton à « Scan en cours … »
             askForPermission()  // Après la demande de permission ça lance automatiquement le scan si l'autorisation est acceptée
         }
 
@@ -159,8 +161,6 @@ class ScanActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         // Ici placer les messages de demande de permission et expliquer pourquoi
-
-        Toast.makeText(this, "onRequestPermissionsResult", Toast.LENGTH_SHORT).show()
 
         if (requestCode == PERMISSION_REQUEST_LOCATION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && locationServiceEnabled()) {
@@ -306,6 +306,9 @@ class ScanActivity : AppCompatActivity() {
 //                    }
                     bluetoothLeScanner?.stopScan(leScanCallback)
                     Toast.makeText(this, getString(R.string.scan_ended), Toast.LENGTH_SHORT).show()
+                    startScan?.text = getString(R.string.texte_bouton_start_scan)   // Met le texte du bouton à texte_bouton_start_scan
+                    startScan?.isEnabled = true // Réactive la possibilité de cliquer sur le bouton « Start Scan »
+
                 }, scanPeriod)
 
                 // On lance le scan

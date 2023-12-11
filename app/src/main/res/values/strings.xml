@@ -24,5 +24,6 @@
     <string name="led_count">Compteur allumage LED : %1$d</string>
     <string name="texte_textView_currentConnexion">Connecté à</string>
     <string name="animate">Animer</string>
+    <string name="scanning">Scan en cours...</string>
 
 </resources>

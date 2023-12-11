@@ -25,4 +25,5 @@
     <string name="enable_ble_notifications">Activation of BLE notifications</string>
     <string name="led_count">LED ignition meter : %d</string>
     <string name="animate">Animate</string>
+    <string name="scanning">Scan in progress...</string>
 </resources>

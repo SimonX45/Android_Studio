@@ -25,5 +25,7 @@
     <string name="texte_textView_currentConnexion">Connecté à</string>
     <string name="animate">Animer</string>
     <string name="scanning">Scan en cours...</string>
+    <string name="texte_bouton_test">TEST</string>
+    <string name="image_de_la_led">Image de la LED</string>
 
 </resources>

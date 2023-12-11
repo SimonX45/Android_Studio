@@ -26,4 +26,6 @@
     <string name="led_count">LED ignition meter : %d</string>
     <string name="animate">Animate</string>
     <string name="scanning">Scan in progress...</string>
+    <string name="texte_bouton_test">TEST</string>
+    <string name="image_de_la_led">LED picture</string>
 </resources>

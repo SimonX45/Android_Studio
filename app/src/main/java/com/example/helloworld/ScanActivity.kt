@@ -95,6 +95,7 @@ class ScanActivity : AppCompatActivity() {
     // TODO : wifi
     private var rvWifi: RecyclerView? = null
     private var startScan: Button? = null
+    private var button_test: Button? = null
     private var currentConnexion: TextView? = null
     private var disconnect: Button? = null
     private var toggleLed: Button? = null
@@ -117,6 +118,7 @@ class ScanActivity : AppCompatActivity() {
 //        disconnect = findViewById<View>(R.id.disconnect)
         disconnect = findViewById<Button>(R.id.disconnect)
         startScan = findViewById<Button>(R.id.startScan)
+        button_test = findViewById<Button>(R.id.button_test)
 //        toggleLed = findViewById<View>(R.id.toggleLed)
         toggleLed = findViewById<Button>(R.id.toggleLed)
         toggleAnimation = findViewById<Button>(R.id.toggleAnimation)
@@ -130,6 +132,10 @@ class ScanActivity : AppCompatActivity() {
             startScan?.text = getString(R.string.scanning)  // Met le texte du bouton à « Scan en cours … »
             askForPermission()  // Après la demande de permission ça lance automatiquement le scan si l'autorisation est acceptée
         }
+
+        button_test?.setOnClickListener {
+            bleDevicesFoundList.clear()
+       }
 
         disconnect?.setOnClickListener {
             // Appeler la bonne méthode
@@ -362,6 +368,10 @@ class ScanActivity : AppCompatActivity() {
 
             // Connect to the device
             BluetoothLEManager.currentDevice = device.device    // A garder ?
+
+            // TODO : à tester prochaine séance
+            bleDevicesFoundList.clear()     // Vider la liste après une connexion réussie
+
             connectToCurrentDevice()
 
         }

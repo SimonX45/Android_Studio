@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import com.example.helloworld.ui.device.adapter.DeviceAdapter
+import com.example.helloworld.ui.wifi.adapter.WifiAdapter
 
 
 import android.bluetooth.BluetoothGatt
@@ -42,6 +43,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.helloworld.ui.data.Device
+import com.google.android.material.snackbar.Snackbar
 
 //import android.content.pm.PackageManager
 //import android.os.Build
@@ -90,6 +92,8 @@ class ScanActivity : AppCompatActivity() {
 
 
     private var rvDevices: RecyclerView? = null
+    // TODO : wifi
+    private var rvWifi: RecyclerView? = null
     private var startScan: Button? = null
     private var currentConnexion: TextView? = null
     private var disconnect: Button? = null
@@ -105,8 +109,9 @@ class ScanActivity : AppCompatActivity() {
         setContentView(R.layout.activity_scan)
         setupRecycler()
 
+        rvWifi = findViewById<RecyclerView>(R.id.rvWifi)
+        // TODO : wifi
         rvDevices = findViewById<RecyclerView>(R.id.rvDevices)
-        startScan = findViewById<Button>(R.id.startScan)
 //        currentConnexion = findViewById<View>(R.id.currentConnexion)
         currentConnexion = findViewById<TextView>(R.id.currentConnexion)
 //        disconnect = findViewById<View>(R.id.disconnect)
@@ -153,22 +158,34 @@ class ScanActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
+        // Ici placer les messages de demande de permission et expliquer pourquoi
+
+        Toast.makeText(this, "onRequestPermissionsResult", Toast.LENGTH_SHORT).show()
+
         if (requestCode == PERMISSION_REQUEST_LOCATION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && locationServiceEnabled()) {
                 // Permission OK & service de localisation actif => Nous pouvons lancer l'initialisation du BLE.
                 // En appelant la méthode setupBLE(), La méthode setupBLE() va initialiser le BluetoothAdapter et lancera le scan.
-                // TODO
+
+                Toast.makeText(this, "Permission OK", Toast.LENGTH_SHORT).show()
+
                 setupBLE()
             } else if (!locationServiceEnabled()) {
                 // Inviter à activer la localisation
+
+                Toast.makeText(this, "Veuillez activer la localisation", Toast.LENGTH_SHORT).show()
+
+
                 startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             } else {
                 // Permission KO => Gérer le cas.
                 // Vous devez ici modifier le code pour gérer le cas d'erreur (permission refusé)
                 // Avec par exemple une Dialog
 
-                // TODO
                 // Demande à l'utilisateur d'accepter la permission de localisation
+
+                Toast.makeText(this, "Veuillez accepter la permission de localisation", Toast.LENGTH_SHORT).show()
+
                 MaterialDialog(this).show {
                     title(R.string.titre_bouton)
                     message(R.string.message_permission_localisation_refusee)
@@ -196,6 +213,7 @@ class ScanActivity : AppCompatActivity() {
      * Sur Android 10 et inférieur, il faut la permission « ACCESS_FINE_LOCATION » qui permet de scanner en BLE
      */
     private fun askForPermission() {
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_REQUEST_LOCATION)
         } else {
@@ -229,11 +247,7 @@ class ScanActivity : AppCompatActivity() {
             // TODO : Bluetooth non activé, vous DEVEZ gérer ce cas autrement qu'avec un Toast.
 
             // Affiche un dialog pour demander à l'utilisateur d'activer le Bluetooth
-            MaterialDialog(this).show {
-                title(R.string.titre_bouton)
-                message(R.string.message_bluetooth_non_active)
-            }
-//            Toast.makeText(this, "Bluetooth non activé", Toast.LENGTH_SHORT).show()
+
         }
     }
 
@@ -247,12 +261,17 @@ class ScanActivity : AppCompatActivity() {
         (getSystemService(BLUETOOTH_SERVICE) as BluetoothManager?)?.let { bluetoothManager ->
             bluetoothAdapter = bluetoothManager.adapter
             if (bluetoothAdapter != null && !bluetoothManager.adapter.isEnabled) {
-//                Toast.makeText(this, R.string.message_bluetooth_non_active, Toast.LENGTH_SHORT).show()
-                MaterialDialog(this).show {
-                    title(R.string.titre_bouton)
-                    message(R.string.message_bluetooth_non_active)
-                }
-                registerForResult.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+
+                // Demande à activer le Bluetooth
+//                MaterialDialog(this).show {
+//                    title(R.string.titre_bouton)
+//                    message(R.string.message_bluetooth_non_active)
+//                }
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.message_bluetooth_non_active), Snackbar.LENGTH_LONG).setAction("Activer") { // Ajoute un bouton "Action" au message
+                    // Ce qui se passe quand on clique sur le bouton
+                    registerForResult.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+                }.show()
+
             } else {
                 scanLeDevice()
             }
@@ -345,6 +364,24 @@ class ScanActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupWifiRecycler() {
+        val rvDevice = findViewById<RecyclerView>(R.id.rvDevices) // Récupération du RecyclerView présent dans le layout
+        rvDevice.layoutManager = LinearLayoutManager(this) // Définition du LayoutManager, Comment vont être affichés les éléments, ici en liste
+        rvDevice.adapter = DeviceAdapter(bleDevicesFoundList) { device ->
+            // Le code écrit ici sera appelé lorsque l'utilisateur cliquera sur un élément de la liste.
+            // C'est un « callback », c'est-à-dire une méthode qui sera appelée à un moment précis.
+            // Évidemment, vous pouvez faire ce que vous voulez. Nous nous connecterons plus tard à notre périphérique
+
+            // Pour la démo, nous allons afficher un Toast avec le nom du périphérique choisi par l'utilisateur.
+            //Toast.makeText(this@ScanActivity, "Clique sur $device", Toast.LENGTH_SHORT).show()
+
+            // Connect to the device
+            BluetoothLEManager.currentDevice = device.device    // A garder ?
+            connectToCurrentDevice()
+
+        }
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -420,7 +457,7 @@ class ScanActivity : AppCompatActivity() {
                              handleCountLedChangeNotificationUpdate(it)
 
                              // Toast affichant le nombre de fois que la led a été allumée
-                             Toast.makeText(this, it.getStringValue(0), Toast.LENGTH_SHORT).show()
+                             //Toast.makeText(this, it.getStringValue(0), Toast.LENGTH_SHORT).show()
 
                         // WIFI SCAN
                         } else if (it.getUuid() == BluetoothLEManager.CHARACTERISTIC_GET_WIFI_SCAN) {
@@ -513,7 +550,7 @@ class ScanActivity : AppCompatActivity() {
 
     // LED ON / OFF
     private fun handleToggleLedNotificationUpdate(characteristic: BluetoothGattCharacteristic) {
-        if (characteristic.getStringValue(0).equals("on", ignoreCase = true)) {
+        if (characteristic.getStringValue(0).equals("1", ignoreCase = true)) {
             ledStatus?.setImageResource(R.drawable.led_on)
         } else {
             ledStatus?.setImageResource(R.drawable.led_off)
@@ -540,7 +577,8 @@ class ScanActivity : AppCompatActivity() {
         // TODO : Vous devez ici récupérer la liste des réseaux WiFi disponibles et les afficher dans une liste.
         // Vous pouvez utiliser un RecyclerView pour afficher la liste des réseaux WiFi disponibles.
         // Vous devez créer un nouvel Activity pour afficher la liste des réseaux WiFi disponibles.
-        // Vous devez créer un nouvel Adapter pour afficher la liste des réseaux WiFi disponibles.
+
+        // OK Vous devez créer un nouvel Adapter pour afficher la liste des réseaux WiFi disponibles.
         // Vous devez créer un nouvel ViewHolder pour afficher la liste des réseaux WiFi disponibles.
         // Vous devez créer un nouvel Layout pour afficher la liste des réseaux WiFi disponibles.
         // Vous devez créer un nouvel Layout pour afficher un élément de la liste des réseaux WiFi disponibles.

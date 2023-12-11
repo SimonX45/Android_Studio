@@ -11,7 +11,7 @@
     <string name="texte_deuxieme_bouton">Deuxième bouton</string>
     <string name="scan_ended">Scan terminé</string>
     <string name="message_permission_localisation_refusee">Veuillez vous rendre dans les paramètres de l\'application et accepter la permission de localisation.</string>
-    <string name="message_bluetooth_non_active">Veuillez activer votre bluetooth.</string>
+    <string name="message_bluetooth_non_active">L\'application a besoin du bluetooth pour fonctionner. Veuillez l\'activer.</string>
     <string name="not_compatible">Téléphone non compatible avec le BLE.</string>
     <string name="texte_bouton_start_scan">Lancer le scan</string>
     <string name="texte_textView_currentConnexion">"Connecté à "</string>

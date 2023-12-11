@@ -1,8 +1,7 @@
-package com.example.helloworld
+package com.example.helloworld.ui.main
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -10,6 +9,9 @@ import android.os.Looper
 import android.widget.Button
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
+import com.example.helloworld.R
+import com.example.helloworld.ScanActivity
+import com.example.helloworld.ui.splash.SplashActivity
 import com.google.android.material.snackbar.Snackbar
 
 

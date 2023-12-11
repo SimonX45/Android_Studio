@@ -1,4 +1,4 @@
-package com.example.helloworld
+package com.example.helloworld.ui.splash
 
 import android.content.Context
 import android.content.Intent
@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import com.example.helloworld.ui.main.MainActivity
+import com.example.helloworld.R
 
 class SplashActivity : AppCompatActivity() {
 

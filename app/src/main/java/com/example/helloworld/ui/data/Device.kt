@@ -1,4 +1,4 @@
-package com.example.helloworld
+package com.example.helloworld.ui.data
 
 import android.bluetooth.BluetoothDevice
 

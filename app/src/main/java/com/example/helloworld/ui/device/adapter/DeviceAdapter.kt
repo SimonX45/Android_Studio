@@ -1,11 +1,12 @@
-package com.example.helloworld
+package com.example.helloworld.ui.device.adapter
 
-import com.example.helloworld.Device
+import com.example.helloworld.ui.data.Device
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.helloworld.R
 
 // TODO : créer graphiquement le textview "title" et le layout "list_item_device"
 class DeviceAdapter(private val deviceList: ArrayList<Device>, private val onClick: ((selectedDevice: Device) -> Unit)? = null) : RecyclerView.Adapter<DeviceAdapter.ViewHolder>() {

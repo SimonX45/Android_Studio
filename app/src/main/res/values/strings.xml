@@ -21,7 +21,8 @@
     <string name="uuid_not_found">UUID non trouvé</string>
     <string name="not_connected">Non connecté</string>
     <string name="enable_ble_notifications">Activation des notifications BLE</string>
-    <string name="led_count">Compteur allumage LED : %d</string>
+    <string name="led_count">Compteur allumage LED : %1$d</string>
     <string name="texte_textView_currentConnexion">Connecté à</string>
+    <string name="animate">Animer</string>
 
 </resources>

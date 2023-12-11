@@ -3,10 +3,7 @@ package com.example.helloworld
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
-import com.example.helloworld.Device
-import com.example.helloworld.BluetoothLEManager
-import com.example.helloworld.DeviceAdapter
-import com.example.helloworld.BluetoothLEManager.GattCallback
+import com.example.helloworld.ui.device.adapter.DeviceAdapter
 
 
 import android.bluetooth.BluetoothGatt
@@ -44,6 +41,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.example.helloworld.ui.data.Device
 
 //import android.content.pm.PackageManager
 //import android.os.Build
@@ -96,6 +94,8 @@ class ScanActivity : AppCompatActivity() {
     private var currentConnexion: TextView? = null
     private var disconnect: Button? = null
     private var toggleLed: Button? = null
+    // TODO : anoimation
+    private var toggleAnimation: Button? = null
     private var ledStatus: ImageView? = null
     private var ledCount: TextView? = null      // Ajouté par moi
 
@@ -114,6 +114,8 @@ class ScanActivity : AppCompatActivity() {
         startScan = findViewById<Button>(R.id.startScan)
 //        toggleLed = findViewById<View>(R.id.toggleLed)
         toggleLed = findViewById<Button>(R.id.toggleLed)
+        toggleAnimation = findViewById<Button>(R.id.toggleAnimation)
+
 //        ledStatus = findViewById<View>(R.id.ledStatus)
         ledStatus = findViewById<ImageView>(R.id.ledStatus)
         ledCount = findViewById<Button>(R.id.ledCount)      // Ajouté par moi
@@ -130,6 +132,11 @@ class ScanActivity : AppCompatActivity() {
         toggleLed?.setOnClickListener {
             // Appeler la bonne méthode
             toggleLed()
+        }
+
+        toggleAnimation?.setOnClickListener {
+            // Appeler la bonne méthode
+            sendAnimation()
         }
 
         // On cache une partie de l'interface au départ, qui sera affichée une fois que l'on sera connecté au Device
@@ -329,7 +336,7 @@ class ScanActivity : AppCompatActivity() {
             // Évidemment, vous pouvez faire ce que vous voulez. Nous nous connecterons plus tard à notre périphérique
 
             // Pour la démo, nous allons afficher un Toast avec le nom du périphérique choisi par l'utilisateur.
-            Toast.makeText(this@ScanActivity, "Clique sur $device", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this@ScanActivity, "Clique sur $device", Toast.LENGTH_SHORT).show()
 
             // Connect to the device
             BluetoothLEManager.currentDevice = device.device    // A garder ?
@@ -369,22 +376,9 @@ class ScanActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     private fun connectToCurrentDevice() {
         BluetoothLEManager.currentDevice?.let { device ->
-            Toast.makeText(this, "Connexion en cours … $device", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "Connexion en cours … $device", Toast.LENGTH_SHORT).show()
 
-//            if (ActivityCompat.checkSelfPermission(
-//                    this,
-//                    Manifest.permission.BLUETOOTH_CONNECT
-//                ) != PackageManager.PERMISSION_GRANTED
-//            ) {
-//                // TODO: Consider calling
-//                //    ActivityCompat#requestPermissions
-//                // here to request the missing permissions, and then overriding
-//                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                //                                          int[] grantResults)
-//                // to handle the case where the user grants the permission. See the documentation
-//                // for ActivityCompat#requestPermissions for more details.
-//                return
-//            }
+
             currentBluetoothGatt = device.connectGatt(
                 this,
                 false,
@@ -392,34 +386,47 @@ class ScanActivity : AppCompatActivity() {
                     onConnect = {
                         // On indique à l'utilisateur que nous sommes correctement connecté
                         runOnUiThread {
-                            Toast.makeText(this, "Connecté à : $device", Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(this, "Connecté à : $device", Toast.LENGTH_SHORT).show()
                             // Nous sommes connecté au device, on active les notifications pour être notifié si la LED change d'état.
 
                             // À IMPLÉMENTER
                             // Vous devez appeler la méthode qui active les notifications BLE
-                            // enableListenBleNotify()
+                            enableListenBleNotify()
 
                             // On change la vue « pour être en mode connecté »
                             setUiMode(true)
 
 
-                            // On sauvegarde dans les « LocalPréférence » de l'application le nom du dernier préphérique
-                            // sur lequel nous nous sommes connecté
+                            // On sauvegarde dans les « LocalPréférence » de l'application le nom du dernier préphérique sur lequel nous nous sommes connecté
+
 
                             // À IMPLÉMENTER EN FONCTION DE CE QUE NOUS AVONS DIT ENSEMBLE
                         }
                     },
                     onNotify = { runOnUiThread {
+
+                        //Toast.makeText(this, "onNotify", Toast.LENGTH_SHORT).show()
+
                         // VOUS DEVEZ APPELER ICI LA MÉTHODE QUI VA GÉRER LE CHANGEMENT D'ÉTAT DE LA LED DANS L'INTERFACE
                         // Si it (BluetoothGattCharacteristic) est pour l'UUID CHARACTERISTIC_NOTIFY_STATE
                         // Alors vous devez appeler la méthode qui va gérer le changement d'état de la LED
-                        /* if(it.getUuid() == BluetoothLEManager.CHARACTERISTIC_NOTIFY_STATE) {
-                            // À IMPLÉMENTER
-                        } else if (it.getUuid() == BluetoothLEManager.CHARACTERISTIC_GET_COUNT) {
-                            // À IMPLÉMENTER
+
+                        // LED ON / OFF
+                        if(it.getUuid() == BluetoothLEManager.CHARACTERISTIC_NOTIFY_STATE) {
+                             handleToggleLedNotificationUpdate(it)
+
+                        // LED COUNT
+                         } else if (it.getUuid() == BluetoothLEManager.CHARACTERISTIC_GET_COUNT) {
+                             handleCountLedChangeNotificationUpdate(it)
+
+                             // Toast affichant le nombre de fois que la led a été allumée
+                             Toast.makeText(this, it.getStringValue(0), Toast.LENGTH_SHORT).show()
+
+                        // WIFI SCAN
                         } else if (it.getUuid() == BluetoothLEManager.CHARACTERISTIC_GET_WIFI_SCAN) {
                             // À IMPLÉMENTER
-                        } */
+                            handleOnNotifyNotificationReceived(it)
+                        }
                     } },
                     onDisconnect = { runOnUiThread { disconnectFromCurrentDevice() } })
             )
@@ -437,26 +444,14 @@ class ScanActivity : AppCompatActivity() {
             startScan?.visibility = View.GONE // Cache le bouton de démarrage du scan
             currentConnexion?.visibility = View.VISIBLE // Affiche l'état de la connexion
 
-//            // Vérifie les permissions pour la connexion Bluetooth
-//            if (ActivityCompat.checkSelfPermission(
-//                    this,
-//                    Manifest.permission.BLUETOOTH_CONNECT
-//                ) != PackageManager.PERMISSION_GRANTED
-//            ) {
-//                // Demande les permissions si nécessaire
-//                ActivityCompat.requestPermissions(
-//                    this,
-//                    arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
-//                    // TODO : PERMISSION_REQUEST_LOCATION ou REQUEST_BLUETOOTH_CONNECT ???
-//                    PERMISSION_REQUEST_LOCATION // Vous devez définir cette constante --> PERMISSION_REQUEST_LOCATION ou REQUEST_BLUETOOTH_CONNECT ???
-//                )
-//                return
-//            }
-
             // Met à jour le texte de l'état de la connexion
             currentConnexion?.text = getString(R.string.connected_to, BluetoothLEManager.currentDevice?.name)
             disconnect?.visibility = View.VISIBLE // Affiche le bouton de déconnexion
             toggleLed?.visibility = View.VISIBLE // Affiche le bouton pour activer/désactiver le LED
+            toggleAnimation?.visibility = View.VISIBLE // Affiche le bouton pour activer/désactiver le LED
+            // A vérifier :
+            ledStatus?.visibility = View.VISIBLE   // Affiche l'état du LED
+            ledCount?.visibility = View.VISIBLE    // Affiche le nombre de fois que la led a été allumée
         } else {
             // Non connecté, reset de la vue
             rvDevices?.visibility = View.VISIBLE // Affiche la liste des appareils trouvés
@@ -464,7 +459,10 @@ class ScanActivity : AppCompatActivity() {
             ledStatus?.visibility = View.GONE // Cache l'état du LED
             currentConnexion?.visibility = View.GONE // Cache l'état de la connexion
             disconnect?.visibility = View.GONE // Cache le bouton de déconnexion
+            toggleAnimation?.visibility = View.GONE // Affiche le bouton pour activer/désactiver le LED
+            // A vérifier :
             toggleLed?.visibility = View.GONE // Cache le bouton pour activer/désactiver le LED
+            ledCount?.visibility = View.GONE    // Cache le nombre de fois que la led a été allumée
         }
     }
 
@@ -513,6 +511,7 @@ class ScanActivity : AppCompatActivity() {
         }
     }
 
+    // LED ON / OFF
     private fun handleToggleLedNotificationUpdate(characteristic: BluetoothGattCharacteristic) {
         if (characteristic.getStringValue(0).equals("on", ignoreCase = true)) {
             ledStatus?.setImageResource(R.drawable.led_on)
@@ -521,14 +520,44 @@ class ScanActivity : AppCompatActivity() {
         }
     }
 
+
+    // LED COUNT
     private fun handleCountLedChangeNotificationUpdate(characteristic: BluetoothGattCharacteristic) {
-        characteristic.getStringValue(0).toIntOrNull()?.let {
-            ledCount?.text = getString(R.string.led_count, it)
-        }
+//        characteristic.getStringValue(0).toIntOrNull()?.let {
+//            ledCount?.text = getString(R.string.led_count, it)  // ledCount?.text = getString(R.string.led_count, it)
+//        }
+
+        val stringValue = characteristic.getStringValue(0)
+        // Affiche stringValue dans un toast
+        Toast.makeText(this, stringValue, Toast.LENGTH_SHORT).show()
+        // affiche un toast "hello"
+        Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show()
     }
 
+
+    // WIFI SCAN
     private fun handleOnNotifyNotificationReceived(characteristic: BluetoothGattCharacteristic) {
         // TODO : Vous devez ici récupérer la liste des réseaux WiFi disponibles et les afficher dans une liste.
         // Vous pouvez utiliser un RecyclerView pour afficher la liste des réseaux WiFi disponibles.
+        // Vous devez créer un nouvel Activity pour afficher la liste des réseaux WiFi disponibles.
+        // Vous devez créer un nouvel Adapter pour afficher la liste des réseaux WiFi disponibles.
+        // Vous devez créer un nouvel ViewHolder pour afficher la liste des réseaux WiFi disponibles.
+        // Vous devez créer un nouvel Layout pour afficher la liste des réseaux WiFi disponibles.
+        // Vous devez créer un nouvel Layout pour afficher un élément de la liste des réseaux WiFi disponibles.
+        // Vous devez créer un nouvel objet « Data » pour stocker les informations d'un réseau WiFi disponible.
+
+        // Toast affichant characteristic
+        //Toast.makeText(this, characteristic.getStringValue(0), Toast.LENGTH_SHORT).show()
+
+        //Toast.makeText(this, getString(R.string.enable_ble_notifications), Toast.LENGTH_SHORT).show()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun sendAnimation() {
+        getMainDeviceService()?.let { service ->
+            val toggleLed = service.getCharacteristic(BluetoothLEManager.CHARACTERISTIC_TOGGLE_LED_UUID)
+            toggleLed.setValue("101010101111011111000010101010")
+            currentBluetoothGatt?.writeCharacteristic(toggleLed)
+        }
     }
 }

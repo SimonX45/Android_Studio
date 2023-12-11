@@ -24,4 +24,5 @@
     <string name="not_connected">Non connecté</string>
     <string name="enable_ble_notifications">Activation des notifications BLE</string>
     <string name="led_count">Compteur allumage LED : %d</string>
+    <string name="animate">Animer</string>
 </resources>

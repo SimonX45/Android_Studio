@@ -18,6 +18,7 @@
         app:layout_constraintVertical_bias="1.0"
         tools:listitem="@layout/list_item_device" />
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvWifi"
         android:layout_width="match_parent"
@@ -27,23 +28,20 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/list_item_wifi" />
-
 
     <ImageView
         android:id="@+id/ledStatus"
-        android:layout_width="131dp"
-        android:layout_height="113dp"
-        android:layout_marginEnd="411dp"
-        android:layout_marginBottom="731dp"
+        android:layout_width="92dp"
+        android:layout_height="30dp"
+        android:contentDescription="@string/image_de_la_led"
         android:src="@drawable/led_off"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/image_de_la_led" />
+        app:layout_constraintTop_toBottomOf="@+id/button_test" />
 
     <Button
         android:id="@+id/button_test"
@@ -60,10 +58,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/texte_bouton_start_scan"
-        app:layout_constraintBottom_toTopOf="@+id/button_test"
+        app:layout_constraintBottom_toTopOf="@+id/ledStatus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/button_test" />
 
     <TextView
         android:id="@+id/currentConnexion"
@@ -115,15 +113,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggleLed" />
 
-    <TextView
-        android:id="@id/ledStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/ledStatus"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggleLed" />
+    <!--    <TextView-->
+    <!--        android:id="@id/ledStatus"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="@string/ledStatus"-->
+    <!--        app:layout_constraintBottom_toTopOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/toggleLed" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

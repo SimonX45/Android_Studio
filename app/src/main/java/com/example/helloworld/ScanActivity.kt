@@ -179,10 +179,11 @@ class ScanActivity : AppCompatActivity() {
             } else if (!locationServiceEnabled()) {
                 // Inviter à activer la localisation
 
-                Toast.makeText(this, "Veuillez activer la localisation", Toast.LENGTH_SHORT).show()
 
-
-                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.message_localisation_non_activee), Snackbar.LENGTH_LONG).setAction("Activer") { // Ajoute un bouton "Action" au message
+                    // Ce qui se passe quand on clique sur le bouton
+                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                }.show()
             } else {
                 // Permission KO => Gérer le cas.
                 // Vous devez ici modifier le code pour gérer le cas d'erreur (permission refusé)
@@ -370,7 +371,7 @@ class ScanActivity : AppCompatActivity() {
             BluetoothLEManager.currentDevice = device.device    // A garder ?
 
             // TODO : à tester prochaine séance
-            bleDevicesFoundList.clear()     // Vider la liste après une connexion réussie
+//            bleDevicesFoundList.clear()     // Vider la liste après une connexion réussie
 
             connectToCurrentDevice()
 
@@ -412,7 +413,11 @@ class ScanActivity : AppCompatActivity() {
             // On demande d'activer la localisation
             // Idéalement on demande avec un activité.
             // À vous de me proposer mieux (Une activité, une dialog, etc)
-            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+
+            Snackbar.make(findViewById(android.R.id.content), getString(R.string.message_localisation_non_activee), Snackbar.LENGTH_LONG).setAction("Activer") { // Ajoute un bouton "Action" au message
+                // Ce qui se passe quand on clique sur le bouton
+                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            }.show()
         }
     }
 

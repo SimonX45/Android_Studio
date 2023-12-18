@@ -28,4 +28,5 @@
     <string name="scanning">Scan in progress...</string>
     <string name="texte_bouton_test">TEST</string>
     <string name="image_de_la_led">LED picture</string>
+    <string name="message_localisation_non_activee">Please enable location so you can scan nearby devices.</string>
 </resources>

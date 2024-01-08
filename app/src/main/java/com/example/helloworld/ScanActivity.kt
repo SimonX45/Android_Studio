@@ -173,7 +173,7 @@ class ScanActivity : AppCompatActivity() {
                 // Permission OK & service de localisation actif => Nous pouvons lancer l'initialisation du BLE.
                 // En appelant la méthode setupBLE(), La méthode setupBLE() va initialiser le BluetoothAdapter et lancera le scan.
 
-                Toast.makeText(this, "Permission OK", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "Permission OK", Toast.LENGTH_SHORT).show()
 
                 setupBLE()
             } else if (!locationServiceEnabled()) {
@@ -585,8 +585,6 @@ class ScanActivity : AppCompatActivity() {
         val stringValue = characteristic.getStringValue(0)
         // Affiche stringValue dans un toast
         Toast.makeText(this, stringValue, Toast.LENGTH_SHORT).show()
-        // affiche un toast "hello"
-        Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show()
     }
 
 

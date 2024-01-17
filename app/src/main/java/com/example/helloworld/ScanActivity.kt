@@ -368,7 +368,7 @@ class ScanActivity : AppCompatActivity() {
             //Toast.makeText(this@ScanActivity, "Clique sur $device", Toast.LENGTH_SHORT).show()
 
             // Connect to the device
-            BluetoothLEManager.currentDevice = device.device    // A garder ?
+            BluetoothLEManager.currentDevice = device.device
 
             // TODO : à tester prochaine séance
 //            bleDevicesFoundList.clear()     // Vider la liste après une connexion réussie
@@ -390,7 +390,7 @@ class ScanActivity : AppCompatActivity() {
             //Toast.makeText(this@ScanActivity, "Clique sur $device", Toast.LENGTH_SHORT).show()
 
             // Connect to the device
-            BluetoothLEManager.currentDevice = device.device    // A garder ?
+            BluetoothLEManager.currentDevice = device.device
             connectToCurrentDevice()
 
         }
@@ -563,6 +563,12 @@ class ScanActivity : AppCompatActivity() {
             currentBluetoothGatt?.setCharacteristicNotification(notificationStatus, true)
             currentBluetoothGatt?.setCharacteristicNotification(notificationLedCount, true)
             currentBluetoothGatt?.setCharacteristicNotification(wifiScan, true)
+
+//            currentBluetoothGatt?.setCharacteristicNotification(service.getCharacteristic(BluetoothLEManager.CHARACTERISTIC_GET_COUNT), true)
+//            currentBluetoothGatt?.setCharacteristicNotification(service.getCharacteristic(BluetoothLEManager.CHARACTERISTIC_GET_WIFI_SCAN), true)
+//            currentBluetoothGatt?.setCharacteristicNotification(service.getCharacteristic(BluetoothLEManager.CHARACTERISTIC_NOTIFY_STATE), true)
+
+
         }
     }
 
@@ -578,13 +584,12 @@ class ScanActivity : AppCompatActivity() {
 
     // LED COUNT
     private fun handleCountLedChangeNotificationUpdate(characteristic: BluetoothGattCharacteristic) {
-//        characteristic.getStringValue(0).toIntOrNull()?.let {
-//            ledCount?.text = getString(R.string.led_count, it)  // ledCount?.text = getString(R.string.led_count, it)
-//        }
+        characteristic.getStringValue(0).toIntOrNull()?.let {
+            ledCount?.text = getString(R.string.led_count, it)  // ledCount?.text = getString(R.string.led_count, it)
+        }
 
-        val stringValue = characteristic.getStringValue(0)
         // Affiche stringValue dans un toast
-        Toast.makeText(this, stringValue, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, characteristic.getStringValue(0), Toast.LENGTH_SHORT).show()
     }
 
 

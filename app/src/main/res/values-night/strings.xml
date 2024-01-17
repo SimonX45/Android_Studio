@@ -6,6 +6,6 @@
     <string name="description_image_accueil">Image accueil</string>
     <string name="message_de_connexion">Connexion...</string>
     <string name="titre_bouton">Hey !</string>
-    <string name="message_bouton">Message</string>
-    <string name="texte_deuxieme_bouton">Deuxième bouton</string>
+    <string name="message_bouton">Le secret pour être heureux dans la vie c\'est... d\'avoir un téléphone Android.</string>
+    <string name="texte_deuxieme_bouton">Bouton surprise !</string>
 </resources>
